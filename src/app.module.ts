@@ -1,18 +1,25 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { APP_GUARD } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
+import { AuthService } from './auth/auth.service';
+import { JwtAuthGuard } from './auth/jwt-auth.guard';
+import { JwtStrategy } from './auth/jwt.strategy';
 import { MailModule } from './mail/mail.module';
 import { Comment } from './model/comment.entity';
 import { News } from './model/news.entity';
 import { User } from './model/user.entity';
 import { NewsModule } from './news/news.module';
+import { UserModule } from './user/user.module';
+import { UserRepository } from './user/user.repository';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
+      isGlobal: true,
       envFilePath: '.env',
     }),
     TypeOrmModule.forRoot({
@@ -25,8 +32,10 @@ import { NewsModule } from './news/news.module';
       entities: [User, News, Comment],
       synchronize: true,
     }),
-    AuthModule,
+
     NewsModule,
+    UserModule,
+    AuthModule,
 
     // MailModule.forRoot({
     //   apiKey: process.env.ACS_KEY,
@@ -36,6 +45,13 @@ import { NewsModule } from './news/news.module';
     // }),
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    JwtStrategy,
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard,
+    },
+  ],
 })
 export class AppModule {}
