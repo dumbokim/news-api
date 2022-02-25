@@ -14,10 +14,10 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({
-      isGlobal: true,
-      envFilePath: '.env',
-    }),
+    // ConfigModule.forRoot({
+    //   isGlobal: true,
+    //   envFilePath: '.env',
+    // }),
     PassportModule.register({
       defaultStrategy: 'jwt',
     }),
