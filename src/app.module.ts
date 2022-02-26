@@ -14,6 +14,7 @@ import { News } from './model/news.entity';
 import { User } from './model/user.entity';
 import { NewsModule } from './news/news.module';
 import { UserModule } from './user/user.module';
+import { CommentModule } from './comment/comment.module';
 
 @Module({
   imports: [
@@ -46,6 +47,7 @@ import { UserModule } from './user/user.module';
 
     NewsModule,
     UserModule,
+    CommentModule,
 
     // MailModule.forRoot({
     //   apiKey: process.env.ACS_KEY,

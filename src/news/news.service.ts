@@ -1,12 +1,15 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { News } from 'src/model/news.entity';
 import { Repository } from 'typeorm';
 import { Comment } from 'src/model/comment.entity';
+import { User } from 'src/model/user.entity';
+import { STATUS_CODES } from 'http';
 
 @Injectable()
 export class NewsService {
   constructor(
+    @InjectRepository(User) private userRepository: Repository<User>,
     @InjectRepository(News) private newsRepository: Repository<News>,
     @InjectRepository(Comment) private commentRepository: Repository<Comment>,
   ) {}
@@ -33,5 +36,31 @@ export class NewsService {
     });
 
     return comment;
+  }
+
+  async applyComment(no: number, userData: Express.User, comment: string) {
+    const user = await this.userRepository.findOne({
+      name: userData['name'],
+      id: userData['id'],
+    });
+
+    console.log(user);
+
+    const news = await this.newsRepository.findOne({ no });
+
+    const commentData = {
+      user,
+      comment,
+      news,
+      date: new Date(),
+    };
+
+    try {
+      await this.commentRepository.save(commentData);
+
+      return true;
+    } catch (error) {
+      throw new BadRequestException();
+    }
   }
 }

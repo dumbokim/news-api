@@ -2,6 +2,7 @@ import {
   Column,
   Entity,
   Index,
+  ManyToMany,
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
@@ -22,4 +23,7 @@ export class Comment {
   @Index()
   @ManyToOne((type) => News, (news) => news.comments)
   news: News;
+
+  @Column()
+  date: Date;
 }
