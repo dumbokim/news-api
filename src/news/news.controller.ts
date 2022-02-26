@@ -34,6 +34,10 @@ export class NewsController {
 
     const result = await this.newsService.applyComment(no, user, comment);
 
-    return result;
+    if (result) {
+      return { message: true };
+    } else {
+      return { message: false };
+    }
   }
 }
