@@ -29,6 +29,6 @@ export class AuthController {
   async verifyToken(@Req() request: Request) {
     const user = request.user;
 
-    return this.authService.findUserByToken(user);
+    return await this.authService.findUserByToken(user);
   }
 }
