@@ -14,9 +14,9 @@ export class AuthController {
   @Public()
   @Post('/login')
   async login(@Body() loginDto: LoginDto) {
-    const accessToken = await this.authService.login(loginDto);
+    const loginData = await this.authService.login(loginDto);
 
-    return accessToken;
+    return loginData;
   }
 
   @Post('/signup')

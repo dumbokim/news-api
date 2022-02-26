@@ -20,11 +20,11 @@ export class AuthService {
     const user = await this.findUser(loginDto);
 
     if (user) {
-      const { id, name } = user;
+      const { id, name, email } = user;
 
       const accessToken = this.jwtService.sign({ name, id });
 
-      return { accessToken };
+      return { accessToken, id, email };
     } else {
       throw new NotFoundException();
     }
