@@ -9,7 +9,6 @@ import { JwtModule, JwtService } from '@nestjs/jwt';
 import { JwtStrategy } from './jwt.strategy';
 import { UserRepository } from '../user/user.repository';
 import { UserModule } from 'src/user/user.module';
-import { CommentRepository } from 'src/news/comment.repository';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 
 @Module({
@@ -30,7 +29,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
       inject: [ConfigService],
     }),
 
-    TypeOrmModule.forFeature([CommentRepository, UserRepository]),
+    TypeOrmModule.forFeature([UserRepository]),
 
     UserModule,
   ],

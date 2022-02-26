@@ -4,7 +4,7 @@ import { Comment } from './comment.entity';
 @Entity('User')
 export class User {
   @PrimaryGeneratedColumn()
-  no: string;
+  no: number;
 
   @Column({ length: 120 })
   name: string;

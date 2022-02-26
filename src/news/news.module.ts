@@ -3,19 +3,14 @@ import { NewsService } from './news.service';
 import { NewsController } from './news.controller';
 import { AuthService } from 'src/auth/auth.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { CommentRepository } from './comment.repository';
 import { UserModule } from 'src/user/user.module';
-import { NewsRepository } from './news.repository';
 import { UserRepository } from 'src/user/user.repository';
+import { News } from 'src/model/news.entity';
+import { User } from 'src/model/user.entity';
+import { Comment } from 'src/model/comment.entity';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([
-      UserRepository,
-      CommentRepository,
-      NewsRepository,
-    ]),
-  ],
+  imports: [TypeOrmModule.forFeature([User, News, Comment])],
   providers: [NewsService],
   controllers: [NewsController],
 })

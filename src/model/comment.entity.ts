@@ -1,11 +1,17 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  Index,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { News } from './news.entity';
 import { User } from './user.entity';
 
 @Entity('Comment')
 export class Comment {
   @PrimaryGeneratedColumn()
-  no: string;
+  no: number;
 
   @Column({ length: 120 })
   comment: string;
@@ -13,6 +19,7 @@ export class Comment {
   @ManyToOne((type) => User, (user) => user.comment)
   user: User;
 
-  @ManyToOne((type) => News, (news) => news.comment)
+  @Index()
+  @ManyToOne((type) => News, (news) => news.comments)
   news: News;
 }
