@@ -7,6 +7,7 @@ import { JwtService } from '@nestjs/jwt';
 import { UserRepository } from 'src/user/user.repository';
 import { InjectRepository } from '@nestjs/typeorm';
 import { VerifyTokenResponseDto } from './dto/verify-token-response.dto';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AuthService {
@@ -53,19 +54,38 @@ export class AuthService {
   }
 
   async createUser(createUserDto: CreateUserDto) {
-    const { email } = createUserDto;
+    const { name, id, email, password } = createUserDto;
 
-    const checkEmail = await this.checkUserEmail(email);
+    // const checkEmail = await this.checkUserEmail(email);
 
-    if (checkEmail) {
-      const signupVerifyToken = uuid.v1();
+    const salt = await bcrypt.genSalt();
 
-      const { name, id, password } = createUserDto;
+    const hashedPwd = await bcrypt.hash(password, salt);
 
-      await this.saveUser(name, id, password, signupVerifyToken);
+    const user = this.userRepository.create({
+      name,
+      id,
+      email,
+      password: hashedPwd,
+    });
 
-      // await this.sendMemberJoinEmail(email, signupVerifyToken);
+    try {
+      const result = await this.userRepository.save(user);
+
+      return result;
+    } catch (error) {
+      console.log('error : ', error);
     }
+
+    // if (checkEmail) {
+    //   const signupVerifyToken = uuid.v1();
+
+    //   const { name, id, password } = createUserDto;
+
+    //   await this.saveUser(name, id, password, signupVerifyToken);
+
+    //   // await this.sendMemberJoinEmail(email, signupVerifyToken);
+    // }
     return '';
   }
 

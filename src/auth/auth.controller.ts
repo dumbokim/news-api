@@ -2,6 +2,7 @@ import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
 import { Public } from 'src/common/public.decorator';
+import { resourceLimits } from 'worker_threads';
 import { AuthService } from './auth.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { LoginDto } from './dto/login.dto';
@@ -21,7 +22,8 @@ export class AuthController {
 
   @Post('/signup')
   async createUser(@Body() createUserDto: CreateUserDto) {
-    await this.authService.createUser(createUserDto);
+    const result = await this.authService.createUser(createUserDto);
+    return result;
   }
 
   @UseGuards()
