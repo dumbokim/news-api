@@ -1,4 +1,10 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  IsNull,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { Comment } from './comment.entity';
 
 @Entity('News')
@@ -13,7 +19,7 @@ export class News {
   content: string;
 
   @Column({})
-  news: string;
+  company: string;
 
   @Column({})
   date: Date;
