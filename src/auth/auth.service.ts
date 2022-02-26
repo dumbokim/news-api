@@ -24,7 +24,7 @@ export class AuthService {
 
       const accessToken = this.jwtService.sign({ name, id });
 
-      return { accessToken, id, email };
+      return { accessToken, name, email };
     } else {
       throw new NotFoundException();
     }
