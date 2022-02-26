@@ -14,7 +14,7 @@ export class NewsService {
   async getAllNews() {
     const news = await this.newsRepository
       .createQueryBuilder('news')
-      .select(['news.no', 'news.title', 'news.date', 'news.news'])
+      .select(['news.no', 'news.title', 'news.date', 'news.company'])
       .getMany();
 
     return news;
