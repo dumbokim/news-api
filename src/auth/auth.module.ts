@@ -14,20 +14,13 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 
 @Module({
   imports: [
-    // ConfigModule.forRoot({
-    //   isGlobal: true,
-    //   envFilePath: '.env',
-    // }),
+    ConfigModule,
     PassportModule.register({
       defaultStrategy: 'jwt',
     }),
-    // JwtModule.register({
-    //   secret: process.env.JWT_SEC,
-    //   signOptions: {
-    //     expiresIn: process.env.JWT_EXP,
-    //   },
-    // }),
+
     JwtModule.registerAsync({
+      imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => {
         return {
           secret: configService.get<string>('JWT_SEC'),
@@ -36,11 +29,13 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
       },
       inject: [ConfigService],
     }),
+
     TypeOrmModule.forFeature([CommentRepository, UserRepository]),
 
     UserModule,
   ],
   providers: [AuthService, JwtStrategy],
   controllers: [AuthController],
+  exports: [JwtStrategy],
 })
 export class AuthModule {}

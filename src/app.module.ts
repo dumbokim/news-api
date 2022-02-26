@@ -1,20 +1,19 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
+import { JwtModule } from '@nestjs/jwt';
+import { PassportModule } from '@nestjs/passport';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
-import { AuthService } from './auth/auth.service';
 import { JwtAuthGuard } from './auth/jwt-auth.guard';
 import { JwtStrategy } from './auth/jwt.strategy';
-import { MailModule } from './mail/mail.module';
 import { Comment } from './model/comment.entity';
 import { News } from './model/news.entity';
 import { User } from './model/user.entity';
 import { NewsModule } from './news/news.module';
 import { UserModule } from './user/user.module';
-import { UserRepository } from './user/user.repository';
 
 @Module({
   imports: [
@@ -32,10 +31,21 @@ import { UserRepository } from './user/user.repository';
       entities: [User, News, Comment],
       synchronize: true,
     }),
+    PassportModule,
+
+    JwtModule.registerAsync({
+      useFactory: async (configService: ConfigService) => {
+        return {
+          secret: configService.get<string>('JWT_SEC'),
+          signOptions: { expiresIn: configService.get<string>('JWT_EXP') },
+        };
+      },
+      inject: [ConfigService],
+    }),
+    AuthModule,
 
     NewsModule,
     UserModule,
-    AuthModule,
 
     // MailModule.forRoot({
     //   apiKey: process.env.ACS_KEY,
@@ -46,12 +56,12 @@ import { UserRepository } from './user/user.repository';
   ],
   controllers: [AppController],
   providers: [
-    AppService,
-    JwtStrategy,
     {
       provide: APP_GUARD,
       useClass: JwtAuthGuard,
     },
+    AppService,
+    JwtStrategy,
   ],
 })
 export class AppModule {}

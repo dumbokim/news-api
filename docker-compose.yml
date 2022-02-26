@@ -1,0 +1,22 @@
+version: '3.8'
+services:
+  api:
+    container_name: 'news-api'
+    image: 'news-api'
+    build:
+      context: ./
+      dockerfile: ./Dockerfile
+      # target: development
+    entrypoint: ['npm', 'run', 'start']
+    env_file:
+      - .env
+    ports:
+      - 80:80
+    networks:
+      - nesjs-network
+    volumes:
+      - .:/usr/app
+      - /usr/app/node_modules
+    restart: unless-stopped
+networks:
+  nesjs-network:
