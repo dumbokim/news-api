@@ -21,20 +21,26 @@ export class AuthService {
     const user = await this.findUser(loginDto);
 
     if (user) {
-      const { id, name, email } = user;
+      const { password } = loginDto;
 
-      const accessToken = this.jwtService.sign({ name, id });
+      const isUser = await bcrypt.compare(password, user.password);
 
-      return { accessToken, name, email };
+      if (isUser) {
+        const { id, name, email } = user;
+
+        const accessToken = this.jwtService.sign({ name, id, email });
+
+        return { accessToken, name, email };
+      }
     } else {
       throw new NotFoundException();
     }
   }
 
   async findUser(loginDto: LoginDto) {
-    const { id, password } = loginDto;
+    const { id } = loginDto;
 
-    const user = await this.userRepository.findOne({ id, password });
+    const user = await this.userRepository.findOne({ id });
 
     return user;
   }
