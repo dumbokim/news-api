@@ -48,11 +48,17 @@ export class NewsService {
 
     const news = await this.newsRepository.findOne({ no });
 
+    const now = new Date();
+    const utcNow = now.getTime() + now.getTimezoneOffset() * 60 * 1000;
+    const koreanDiff = 9 * 60 * 60 * 1000;
+
+    const koreanTime = new Date(utcNow + koreanDiff);
+
     const commentData = {
       user,
       comment,
       news,
-      date: new Date(),
+      date: koreanTime,
     };
 
     try {
