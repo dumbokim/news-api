@@ -21,6 +21,7 @@ export class CommentService {
 
     const comments = await this.commentRepository
       .createQueryBuilder('comment')
+      .orderBy('news.no', 'DESC')
       .leftJoin('comment.news', 'news')
       .addSelect(['news.title', 'news.no'])
       .where({ user })

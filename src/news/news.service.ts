@@ -17,6 +17,7 @@ export class NewsService {
   async getAllNews() {
     const news = await this.newsRepository
       .createQueryBuilder('news')
+      .orderBy('news.no', 'DESC')
       .select(['news.no', 'news.title', 'news.date', 'news.company'])
       .getMany();
 
